@@ -9,10 +9,10 @@
 5. Executando a aplicação
 
 ```console
-git clone https://github.com/gusttavoaguiarr/restful-api-flask-mongodb
+git clone https://github.com/gusttavoaguiarr/restful-api-flask-mongodb-redis
 cd 
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -r requeriments.txt
+pip install -r requirements.txt
 python app.py
 ```

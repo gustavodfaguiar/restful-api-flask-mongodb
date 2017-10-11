@@ -6,17 +6,17 @@ from flask_pymongo import PyMongo
 app = Flask(__name__)
 
 app.config['MONGO_DBNAME'] = 'restdb'
-app.config['MONGO_URI'] = 'mongodb://localhost:27017/restdb'
+app.config['MONGO_URI'] = 'mongodb://mongodb:27017/restdb'
 
 mongo = PyMongo(app)
 
 @app.route('/', methods=['GET'])
 def test():
-    return jsonify({'message': 'It works! irrru!'})
+    return jsonify({'message': 'Irrrrrrrrrru' })
 
 @app.route('/lang', methods=['GET'])
 def return_all():
-	languagens = mongo.db.languages
+	languages = mongo.db.languages
 	output = []
 
 	for value in languages.find():
@@ -31,9 +31,13 @@ def return_one(name):
 
 @app.route('/lang', methods=['POST'])
 def add_one():
-    language = {'name': request.json['name']}
-    languages.append(language)
-    return jsonify({'languages': languages})
+    language = mongo.db.languages
+    name = request.json['name']
+ 
+    language_id = language.insert({'name': name})
+    new_language = language.find_one({'_id': language_id })
+    output = {'name' : new_language['name']}
+    return jsonify({'result' : output}) 
 
 @app.route('/lang/<string:name>', methods=['PUT'])
 def edit_one(name):
@@ -48,4 +52,4 @@ def remove_one(name):
     return jsonify({'languages': languages})
 
 if __name__ == '__main__':
-    app.run(debug=True, port=8080)
+    app.run(host="0.0.0.0", debug=True)

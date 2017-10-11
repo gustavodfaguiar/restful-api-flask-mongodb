@@ -1,7 +1,14 @@
-from flask import Flask, jsonify, request
+from flask import Flask
+from flask import jsonify
+from flask import request
+from flask_pymongo import PyMongo
+
 app = Flask(__name__)
 
-languages = [{'name': 'Javascript',}, {'name': 'Python'}, {'name': 'Ruby'}]
+app.config['MONGO_DBNAME'] = 'restdb'
+app.config['MONGO_URI'] = 'mongodb://localhost:27017/restdb'
+
+mongo = PyMongo(app)
 
 @app.route('/', methods=['GET'])
 def test():
@@ -9,7 +16,13 @@ def test():
 
 @app.route('/lang', methods=['GET'])
 def return_all():
-    return jsonify({'languages': languages})
+	languagens = mongo.db.languages
+	output = []
+
+	for value in languages.find():
+		output.append({'name': value['name']})
+
+	return jsonify({'languages': output})
 
 @app.route('/lang/<string:name>', methods=['GET'])
 def return_one(name):

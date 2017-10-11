@@ -1,4 +1,4 @@
-# Create api RESTFul with Flask and MongoDB
+# Create api RESTFul with Flask and MongoDB and Redis
 
 ## Como testar?
 
@@ -13,6 +13,6 @@ git clone https://github.com/gusttavoaguiarr/restful-api-flask-mongodb
 cd 
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt
+pip install -r requeriments.txt
 python app.py
 ```

@@ -26,8 +26,13 @@ def return_all():
 
 @app.route('/lang/<string:name>', methods=['GET'])
 def return_one(name):
-    langs = [language for language in languages if language['name'] == name]
-    return jsonify({'language': langs[0]})
+    language = mongo.db.languages
+    search = language.find_one({'name': name})
+    if search:
+        output = {'name': search['name']}
+    else:
+        output = "No such name"
+    return jsonify({'result': output})
 
 @app.route('/lang', methods=['POST'])
 def add_one():

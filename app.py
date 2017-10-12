@@ -12,43 +12,51 @@ mongo = PyMongo(app)
 
 @app.route('/', methods=['GET'])
 def test():
-    return jsonify({'message': 'Irrrrrrrrrru' })
+    return jsonify({'message': 'Irrrrrrrrrru'})
 
 @app.route('/lang', methods=['GET'])
 def return_all():
-	languages = mongo.db.languages
-	output = []
+    languages = mongo.db.languages
+    output = []
 
-	for value in languages.find():
-		output.append({'name': value['name']})
+    for value in languages.find():
+        output.append({'_id': str(value['_id']), 'name': value['name']})
 
-	return jsonify({'languages': output})
+    return jsonify({'languages': output})
 
 @app.route('/lang/<string:name>', methods=['GET'])
 def return_one(name):
     language = mongo.db.languages
     search = language.find_one({'name': name})
     if search:
-        output = {'name': search['name']}
+        output = {'_id': search['_id'], 'name': search['name']}
     else:
         output = "No such name"
-    return jsonify({'result': output})
+    return jsonify({'language': output})
 
 @app.route('/lang', methods=['POST'])
 def add_one():
     language = mongo.db.languages
     name = request.json['name']
- 
     language_id = language.insert({'name': name})
-    new_language = language.find_one({'_id': language_id })
-    output = {'name' : new_language['name']}
-    return jsonify({'result' : output}) 
+    new_language = language.find_one({'_id': language_id})
+    output = {'name': new_language['name']}
+    return jsonify({'language': output})
 
-@app.route('/lang/<string:name>', methods=['PUT'])
-def edit_one(name):
-    langs = [language for language in languages if language['name'] == name]
-    langs[0]['name'] = request.json['name']
-    return jsonify({'languages': langs[0]})
+@app.route('/lang/<string:language_id>', methods=['PUT'])
+def edit_one(language_id):
+    language = mongo.db.languages
+    language.update_one(
+            {
+                'id': 2}, {
+                    '$set': 
+                    { 
+                        'name': request.json['name'] 
+                }
+            }
+        )
+    output = {'language': request.json['name']}
+    return jsonify({'language': output})
 
 @app.route('/lang/<string:name>', methods=['DELETE'])
 def remove_one(name):

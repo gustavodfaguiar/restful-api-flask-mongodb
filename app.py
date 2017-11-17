@@ -2,11 +2,13 @@ from flask import Flask
 from flask import jsonify
 from flask import request
 from flask_pymongo import PyMongo
+from bson.objectid import ObjectId
+
 
 app = Flask(__name__)
 
-app.config['MONGO_DBNAME'] = 'restdb'
-app.config['MONGO_URI'] = 'mongodb://mongodb:27017/restdb'
+app.config['MONGO_DBNAME'] = 'mongodb'
+app.config['MONGO_URI'] = 'mongodb://mongodb:27017/mongodb'
 
 mongo = PyMongo(app)
 
@@ -29,13 +31,13 @@ def return_one(name):
     language = mongo.db.languages
     search = language.find_one({'name': name})
     if search:
-        output = {'_id': search['_id'], 'name': search['name']}
+        output = {'_id': str(search['_id']), 'name': search['name']}
     else:
         output = "No such name"
     return jsonify({'language': output})
 
 @app.route('/lang', methods=['POST'])
-def add_one():
+def create():
     language = mongo.db.languages
     name = request.json['name']
     language_id = language.insert({'name': name})
@@ -43,26 +45,30 @@ def add_one():
     output = {'name': new_language['name']}
     return jsonify({'language': output})
 
-@app.route('/lang/<string:language_id>', methods=['PUT'])
-def edit_one(language_id):
+@app.route('/lang/<language_id>', methods=['PUT'])
+def udpdate(language_id):
     language = mongo.db.languages
-    language.update_one(
-            {
-                'id': 2}, {
-                    '$set': 
-                    { 
-                        'name': request.json['name'] 
-                }
-            }
-        )
-    output = {'language': request.json['name']}
+    try:
+        language.update_one(
+                { '_id': ObjectId(language_id) },
+                {
+                    '$set': {
+                            'name': request.json['name']
+                    }
+                })
+        output = {'language': request.json['name']}
+    except:
+        print(str('teste'))
+
     return jsonify({'language': output})
 
-@app.route('/lang/<string:name>', methods=['DELETE'])
-def remove_one(name):
-    lang = [language for language in languages if language['name'] == name]
-    languages.remove(lang[0])
-    return jsonify({'languages': languages})
+@app.route('/lang/<language_id>', methods=['DELETE'])
+def delete(language_id):
+    language = mongo.db.languages
+    delete = language.delete_many({
+        '_id': ObjectId(language_id)
+    })
+    return jsonify({'languages': "Remove success"})
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", debug=True)

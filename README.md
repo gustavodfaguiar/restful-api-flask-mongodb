@@ -1,18 +1,52 @@
-# Create api RESTFul with Flask and MongoDB and Redis
+# Create api RESTFul with Flask and MongoDB
 
-## Como testar?
-
-1. Clone o repositório
-2. Crie um virtualenv com Python 3.*
-3. Ative o virtualenv
-4. Instale as dependências
-5. Executando a aplicação
-
-```console
-git clone https://github.com/gusttavoaguiarr/restful-api-flask-mongodb-redis
-cd 
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-python app.py
+## API Endpoints
+GET /lang
 ```
+{
+    "languages": [
+        {
+            "_id": "5a0ed3acbc3f2d000be78088",
+            "name": "GO"
+        }
+    ]
+}
+```
+
+GET /lang/ < name >
+```
+{
+    "language": {
+        "_id": "5a0ed3acbc3f2d000be78088",
+        "name": "GO"
+    }
+}
+```
+
+
+POST /lang
+```
+{
+    "name": "Python"
+}
+```
+
+PUT /lang/< language_id >
+```
+{
+    "name": "Go"
+}
+```
+
+DELETE /lang/< language_id >
+
+
+## Requirements
+* Docker Compose
+
+## RUN
+```
+docker-compose up
+```
+
+http://localhost:5000/lang

@@ -2,7 +2,7 @@
 
 ## API Endpoints
 GET /lang
-```
+```json
 {
     "languages": [
         {
@@ -13,8 +13,8 @@ GET /lang
 }
 ```
 
-GET /lang/ < name >
-```
+GET /lang/:name
+```json
 {
     "language": {
         "_id": "5a0ed3acbc3f2d000be78088",
@@ -25,20 +25,20 @@ GET /lang/ < name >
 
 
 POST /lang
-```
+```json
 {
     "name": "Python"
 }
 ```
 
-PUT /lang/< language_id >
-```
+PUT /lang/:language_id
+```json
 {
     "name": "Go"
 }
 ```
 
-DELETE /lang/< language_id >
+DELETE /lang/:language_id
 
 
 ## Requirements
